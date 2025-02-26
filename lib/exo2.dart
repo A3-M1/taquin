@@ -31,33 +31,36 @@ class _Exo2State extends State<Exo2> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     double screenSize = MediaQuery.of(context).size.width * 0.9;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(color: Colors.white),
-              child: Center(
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..translate(_positionX, 0)
-                    ..rotateZ(_rotation)
-                    ..scale(_isMirrored ? -_scale : _scale, _scale),
-                  child: Image.network(
-                    'https://picsum.photos/300/300',
-                    width: screenSize,
-                    height: screenSize,
-                    fit: BoxFit.cover,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Center(
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..translate(_positionX, 0)
+                        ..rotateZ(_rotation)
+                        ..scale(_isMirrored ? -_scale : _scale, _scale),
+                      child: Image.network(
+                        'https://picsum.photos/300/300',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
         const Text("Rotation"),

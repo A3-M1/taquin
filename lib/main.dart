@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Transform Image',
+        title: 'Exercices Taquin',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
           useMaterial3: true,
@@ -64,12 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
-        leading: inExercise ? IconButton(
-          icon: const Icon(Icons.home),
-          onPressed: () {
-            appState.selectExo(-1);
-          },
-        ) : null,
+        leading: inExercise
+            ? IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () {
+                  appState.selectExo(-1);
+                },
+              )
+            : null,
       ),
       body: page,
     );
