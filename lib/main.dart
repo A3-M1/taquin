@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'exo2.dart';
+import 'exolist.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,14 +11,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Transform Image',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Transform Image',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
+  }
+}
+
+class MyAppState extends ChangeNotifier {
+  var selectedExo = -1;
+
+  void selectExo(int index) {
+    selectedExo = index;
+    notifyListeners();
   }
 }
 
@@ -29,24 +42,58 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-
   @override
   Widget build(BuildContext context) {
-     // Taille dynamique
+    var appState = context.watch<MyAppState>();
+    var selectedExo = appState.selectedExo;
+    Widget page;
+    String title;
+    bool inExercise = false;
+
+    if (selectedExo < 0 || selectedExo >= exerciseList.length) {
+      page = ExerciceChoice();
+      title = "Choose an exercise";
+      inExercise = false;
+    } else {
+      page = exerciseList[selectedExo].page;
+      title = exerciseList[selectedExo].description;
+      inExercise = true;
+    }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Row(
-          children: [
-            Icon(Icons.arrow_back_sharp),
-            SizedBox(width: 10),
-            Text("Rotate & Scale Image"),
-          ],
-        ),
+        title: Text(title),
+        leading: inExercise ? IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () {
+            appState.selectExo(-1);
+          },
+        ) : null,
       ),
-      body: Exo2(),
+      body: page,
+    );
+  }
+}
+
+class ExerciceChoice extends StatelessWidget {
+  const ExerciceChoice({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    return ListView.builder(
+      itemCount: exerciseList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(exerciseList[index].name),
+          subtitle: Text(exerciseList[index].description),
+          onTap: () {
+            appState.selectExo(index);
+          },
+        );
+      },
     );
   }
 }
