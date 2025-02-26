@@ -1,6 +1,7 @@
 import 'exo2b.dart';
 import 'exo.dart';
 import 'exo2.dart';
+import 'exo4.dart';
 
 final exerciseList = [
   Exercice(
