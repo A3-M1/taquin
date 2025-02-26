@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Transform Image',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
           useMaterial3: true,
         ),
         home: const MyHomePage(),
@@ -83,17 +83,23 @@ class ExerciceChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-    return ListView.builder(
-      itemCount: exerciseList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(exerciseList[index].name),
-          subtitle: Text(exerciseList[index].description),
-          onTap: () {
-            appState.selectExo(index);
-          },
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: ListView.builder(
+        itemCount: exerciseList.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+              title: Text(exerciseList[index].name),
+              subtitle: Text(exerciseList[index].description),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                appState.selectExo(index);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
