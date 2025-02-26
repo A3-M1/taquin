@@ -9,14 +9,15 @@ class Exo5a extends StatelessWidget {
       child: GridView.count(
           crossAxisCount: 3,
           crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
           padding: const EdgeInsets.all(10),
           children: List.generate(
             9,
             (index) => Container(
-              color: Colors.blue[100 * (index % 9)],
+              color: Colors.deepOrange[100 * (index+1 % 9)],
               child: Center(
                 child: Text(
-                  'Item $index',
+                  'Tile $index',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
