@@ -31,16 +31,21 @@ class _Exo2State extends State<Exo2> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
-    double screenSize = MediaQuery.of(context).size.width * 0.9;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          height: 50,
+        ),
         Expanded(
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
+              double containerWidth = constraints.maxWidth * 0.8;
+              double containerHeigth = constraints.maxHeight * 0.8;
+
               return Container(
+                width: containerWidth,
+                height: containerHeigth,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(color: Colors.white),
                 child: Padding(
@@ -53,8 +58,10 @@ class _Exo2State extends State<Exo2> {
                         ..rotateZ(_rotation)
                         ..scale(_isMirrored ? -_scale : _scale, _scale),
                       child: Image.network(
-                        'https://picsum.photos/300/300',
+                        'https://picsum.photos/512/1024',
                         fit: BoxFit.cover,
+                        width: containerWidth,
+                        height: containerHeigth,
                       ),
                     ),
                   ),

@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'dart:async';
 
 class Exo2b extends StatefulWidget {
   const Exo2b({super.key});
 
   @override
-  State<Exo2b> createState() => _Exo2State();
+  State<Exo2b> createState() => _Exo2bState();
 }
 
-class _Exo2State extends State<Exo2b> {
+class _Exo2bState extends State<Exo2b> {
   double _rotation = 0;
   double _scale = 1;
   bool _isMirrored = false;
   double _positionX = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    const d = Duration(milliseconds: 50);
+    Timer.periodic(d, animate);
+  }
+
+  void animate(Timer t) {
+    t.cancel();
+  }
 
   void _resetTransformations() {
     setState(() {
@@ -31,35 +43,43 @@ class _Exo2State extends State<Exo2b> {
 
   @override
   Widget build(BuildContext context) {
-    double screenSize = MediaQuery.of(context).size.width * 0.9;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          height: 50,
+        ),
         Expanded(
-          child: Container(
-            width: screenSize * 0.8,
-            //height: screenSize * 0.8,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(color: Colors.white),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..translate(_positionX, 0)
-                    ..rotateZ(_rotation)
-                    ..scale(_isMirrored ? -_scale : _scale, _scale),
-                  child: Image.network(
-                    'https://picsum.photos/300/300',
-                    width: screenSize,
-                    height: screenSize,
-                    fit: BoxFit.cover,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              double containerWidth = constraints.maxWidth * 0.8;
+              double containerHeigth = constraints.maxHeight * 0.8;
+
+              return Container(
+                width: containerWidth,
+                height: containerHeigth,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Center(
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..translate(_positionX, 0)
+                        ..rotateZ(_rotation)
+                        ..scale(_isMirrored ? -_scale : _scale, _scale),
+                      child: Image.network(
+                        'https://picsum.photos/512/1024',
+                        fit: BoxFit.cover,
+                        width: containerWidth,
+                        height: containerHeigth,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
         const Text("Rotation"),
