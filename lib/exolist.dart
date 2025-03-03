@@ -1,3 +1,4 @@
+import 'exo1.dart';
 import 'exo2b.dart';
 import 'exo.dart';
 import 'exo2.dart';
@@ -6,6 +7,7 @@ import 'exo5a.dart';
 import 'exo5b.dart';
 
 final exerciseList = [
+  Exercice(name: 'Exercice 1', description: 'Display image', page: Exo1()),
   Exercice(
       name: 'Exercice 2', description: 'Rotate & Scale Image', page: Exo2()),
   Exercice(
