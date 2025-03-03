@@ -20,7 +20,7 @@ class Exo5b extends StatelessWidget {
                 alignment: Alignment(index%3-1,(index/3).toInt() -1),
                 widthFactor: 1/3,
                 heightFactor: 1/3,
-                child: Image.network('https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'),
+                child: Image.network('https://picsum.photos/512'),
               ),
             ),
           ),
