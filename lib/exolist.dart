@@ -1,3 +1,4 @@
+import 'exo0.dart';
 import 'exo1.dart';
 import 'exo2b.dart';
 import 'exo.dart';
@@ -8,6 +9,10 @@ import 'exo5b.dart';
 import 'exo5c.dart';
 
 final exerciseList = [
+  Exercice(
+      name: 'Exercice 0',
+      description: 'Collect image from the phone or camera',
+      page: Exo0()),
   Exercice(name: 'Exercice 1', description: 'Display image', page: Exo1()),
   Exercice(
       name: 'Exercice 2', description: 'Rotate & Scale Image', page: Exo2()),
@@ -21,5 +26,7 @@ final exerciseList = [
   Exercice(
       name: 'Exercice 5b', description: 'Display an image grid', page: Exo5b()),
   Exercice(
-      name: 'Exercice 5c', description: 'Display an adaptative image grid', page: Exo5c()),
+      name: 'Exercice 5c',
+      description: 'Display an adaptative image grid',
+      page: Exo5c()),
 ];

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Exercice {
-
   final String name;
   final String description;
   final Widget page;
