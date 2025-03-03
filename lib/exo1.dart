@@ -8,9 +8,7 @@ class Exo1 extends StatelessWidget {
     return Center(
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          double imageSize = constraints.maxWidth *
-              0.8; // Taille de l'image proportionnelle à la largeur de l'écran
-
+          double imageSize = constraints.maxWidth * 0.8;
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
