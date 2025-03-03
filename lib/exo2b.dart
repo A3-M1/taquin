@@ -153,8 +153,8 @@ class _Exo2bState extends State<Exo2b> {
           },
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 200),
             IconButton(
               onPressed: () => _rotateBy(-pi / 2),
               icon: const Icon(Icons.rotate_left),
@@ -168,8 +168,8 @@ class _Exo2bState extends State<Exo2b> {
           ],
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 120),
             ElevatedButton(
               onPressed: () {
                 setState(() {
