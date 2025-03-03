@@ -22,10 +22,10 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/new_ic_launch.png" # Assurez-vous que le chemin est correct
+  image_path: "assets/icon.png" # Assurez-vous que le chemin est correct
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/new_ic_launch.png # Ajoutez l'image dans la section assets
+    - assets/icon.png # Ajoutez l'image dans la section assets
