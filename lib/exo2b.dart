@@ -14,16 +14,36 @@ class _Exo2bState extends State<Exo2b> {
   double _scale = 1;
   bool _isMirrored = false;
   double _positionX = 0;
+  bool isSwitched = false;
+  static const d = Duration(milliseconds: 50);
+  Timer? timer;
+  bool _isZooming = true;
 
   @override
   void initState() {
     super.initState();
-    const d = Duration(milliseconds: 50);
-    Timer.periodic(d, animate);
   }
 
   void animate(Timer t) {
-    t.cancel();
+    if (!mounted) return;
+    setState(() {
+      _rotation = (_rotation + 0.1) % (2 * pi);
+      _positionX = (_positionX + 1) % 100;
+
+      if (_isZooming) {
+        _scale += 0.01;
+        if (_scale >= 2) {
+          _scale = 2.0;
+          _isZooming = false;
+        }
+      } else {
+        _scale -= 0.01;
+        if (_scale <= 0.5) {
+          _scale = 0.5;
+          _isZooming = true;
+        }
+      }
+    });
   }
 
   void _resetTransformations() {
@@ -39,6 +59,23 @@ class _Exo2bState extends State<Exo2b> {
     setState(() {
       _rotation = (_rotation + angle) % (2 * pi);
     });
+  }
+
+  void _toggleSwitch(bool value) {
+    setState(() {
+      isSwitched = value;
+      if (isSwitched) {
+        timer = Timer.periodic(d, animate);
+      } else {
+        timer?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -116,8 +153,8 @@ class _Exo2bState extends State<Exo2b> {
           },
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(width: 200),
             IconButton(
               onPressed: () => _rotateBy(-pi / 2),
               icon: const Icon(Icons.rotate_left),
@@ -126,11 +163,13 @@ class _Exo2bState extends State<Exo2b> {
               onPressed: () => _rotateBy(pi / 2),
               icon: const Icon(Icons.rotate_right),
             ),
+            const SizedBox(width: 120),
+            const Text(" Play "),
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(width: 120),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -144,6 +183,16 @@ class _Exo2bState extends State<Exo2b> {
               onPressed: _resetTransformations,
               child: const Text("Reset"),
             ),
+            const SizedBox(width: 55),
+            Switch(
+                activeColor: Colors.orangeAccent,
+                activeTrackColor: Colors.blue,
+                inactiveThumbColor: Colors.green,
+                inactiveTrackColor: Colors.red,
+                value: isSwitched,
+                onChanged: (value) {
+                  _toggleSwitch(value);
+                }),
           ],
         ),
         const SizedBox(height: 20),
