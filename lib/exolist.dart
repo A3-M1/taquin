@@ -7,6 +7,7 @@ import 'exo4.dart';
 import 'exo5a.dart';
 import 'exo5b.dart';
 import 'exo5c.dart';
+import 'exo6.dart';
 
 final exerciseList = [
   Exercice(
@@ -29,4 +30,5 @@ final exerciseList = [
       name: 'Exercice 5c',
       description: 'Display an adaptative image grid',
       page: Exo5c()),
+  Exercice(name: 'Exercice 6', description: 'Switch two tiles', page: Exo6()),
 ];
