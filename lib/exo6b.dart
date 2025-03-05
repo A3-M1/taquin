@@ -58,12 +58,22 @@ class _TaquinState extends State<Taquin> {
 
   late int taquinResolution;
   late List<int> tiles;
+  static const int sensitivity = 6;
 
   @override
   void initState() {
     super.initState();
     taquinResolution = widget.taquinResolution;
     tiles = List.generate(taquinResolution*taquinResolution, (index) => index);
+  }
+
+  @override
+  void didUpdateWidget(covariant Taquin oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.taquinResolution != widget.taquinResolution) {
+      taquinResolution = widget.taquinResolution;
+      tiles = List.generate(taquinResolution*taquinResolution, (index) => index);
+    }
   }
 
   void swapTiles(int tile1, int tile2) {
@@ -82,22 +92,46 @@ class _TaquinState extends State<Taquin> {
     }
   }
 
+  void handleSwipe(DragEndDetails details) {
+    final int emptyTile = tiles.indexWhere((element) => element == taquinResolution * taquinResolution - 1);
+    final int emptyTileColumn = emptyTile % taquinResolution;
+    final int emptyTileRow = (emptyTile / taquinResolution).toInt();
+
+    if (details.velocity.pixelsPerSecond.dx.abs() > details.velocity.pixelsPerSecond.dy.abs()) {
+      if (details.velocity.pixelsPerSecond.dx > sensitivity && emptyTileColumn > 0) {
+        swapTiles(emptyTile, emptyTile - 1);
+      } else if (details.velocity.pixelsPerSecond.dx < -sensitivity && emptyTileColumn < taquinResolution - 1) {
+        swapTiles(emptyTile, emptyTile + 1);
+      }
+    } else {
+      if (details.velocity.pixelsPerSecond.dy > sensitivity && emptyTileRow > 0) {
+        swapTiles(emptyTile, emptyTile - taquinResolution);
+      } else if (details.velocity.pixelsPerSecond.dy < -sensitivity && emptyTileRow < taquinResolution - 1) {
+        swapTiles(emptyTile, emptyTile + taquinResolution);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisCount: taquinResolution,
-      crossAxisSpacing: 2,
-      mainAxisSpacing: 2,
-      padding: const EdgeInsets.all(10),
-      children: List.generate(
-        taquinResolution*taquinResolution,
-        (index) => Tile(
-          tileNumber: tiles[index], 
-          taquinResolution: taquinResolution, 
-          imageUrl: 'https://picsum.photos/512',
-          onTap: () => handleTileClick(index),
-          displayNumber: true,
+    return GestureDetector(
+      onPanEnd: (details) => handleSwipe(details),
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: taquinResolution,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+        padding: const EdgeInsets.all(10),
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(
+          taquinResolution*taquinResolution,
+          (index) => Tile(
+            tileNumber: tiles[index], 
+            taquinResolution: taquinResolution, 
+            imageUrl: 'https://picsum.photos/512',
+            onTap: () => handleTileClick(index),
+            displayNumber: true,
+          ),
         ),
       ),
     );
@@ -153,9 +187,9 @@ class Tile extends StatelessWidget {
           ),
           if (displayNumber) Center(
             child: Text(
-              tileNumber.toString(),
+              (tileNumber+1).toString(),
               style: TextStyle(
-                color: Colors.grey[600]?.withAlpha(200),
+                color: Colors.white.withAlpha(200),
                 fontSize: 20,
                 fontWeight: FontWeight.bold
               ),
