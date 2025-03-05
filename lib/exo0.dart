@@ -13,24 +13,21 @@ class Exo0 extends StatefulWidget {
 }
 
 class _Exo0State extends State<Exo0> {
-  Uint8List? _webImage; // Stocker l’image en mémoire pour Web
-  File? _image; // Stocker le fichier pour mobile
+  Uint8List? _webImage;
+  File? _image;
   final ImagePicker _picker = ImagePicker();
 
-  // Méthode pour choisir une image depuis la galerie
   pickImageFromGallery() async {
     if (kIsWeb) {
-      // Utilisation de FilePicker pour Web
       FilePickerResult? result =
           await FilePicker.platform.pickFiles(type: FileType.image);
 
       if (result != null) {
         setState(() {
-          _webImage = result.files.first.bytes; // Stockage en mémoire
+          _webImage = result.files.first.bytes;
         });
       }
     } else {
-      // Utilisation de ImagePicker pour Android/iOS
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
@@ -40,10 +37,8 @@ class _Exo0State extends State<Exo0> {
     }
   }
 
-  // Méthode pour prendre une photo avec la caméra
   pickImageFromCamera() async {
     if (kIsWeb) {
-      // Pas de support direct de la caméra sur Flutter Web
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Camera not supported on Web!")),
       );

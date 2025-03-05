@@ -1,13 +1,26 @@
 # taquin
 Jeu du Taquin utilisant Flutter
 
+
+
+
+
+
+
+
 ## TP2 - Taquin - Idées : 
 
 - Rond qui tourne pour reload le jeu 
-- récupérer une image sur le téléphone 
-- temps pour réssoudre le taquin
-- mode simple, moyen, expert 
-- compteur de déplacement de tuiles
+- temps pour réssoudre le taquin + comteur de déplacement des tuiles en haut
+- théorie du taquin mode simple, moyen, expert 
 - pop up pour dire au joueur qu'il a gagné 
+
+
+
+
+=> exo 1 : récupère une image dans la gallerie ou récupère une photo de la caméra
+
+
+
 
 

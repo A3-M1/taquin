@@ -1,6 +1,6 @@
 name: taquin
 description: "Taquin game"
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -13,22 +13,23 @@ dependencies:
 
   provider: ^6.0.0
   image_picker: ^1.1.2
-  flutter_plugin_android_lifecycle: 2.0.15
-  file_picker: ^4.0.0
+  flutter_plugin_android_lifecycle: ^2.0.22
+  file_picker: ^8.3.3
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.14.3 # Mettre à jour la version de flutter_launcher_icons
+  flutter_launcher_icons: ^0.14.3
   flutter_lints: ^2.0.0
 
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon.png" # Assurez-vous que le chemin est correct
+  image_path: "assets/icon.png"
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/icon.png # Ajoutez l'image dans la section assets
+    - assets/icon.png
+
