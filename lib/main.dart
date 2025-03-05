@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'exolist.dart';
+import 'exos/exolist.dart';
 import 'package:provider/provider.dart';
 
 void main() {
