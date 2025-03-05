@@ -1,75 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Taquin extends StatefulWidget {
+
+class Taquin extends StatelessWidget {
 
   final int taquinResolution;
+  final List<int> tiles;
+  final Function(int) handleTileClick;
+  final Function(DragEndDetails) handleSwipe;
 
   const Taquin({
     super.key,
-    required this.taquinResolution
+    required this.taquinResolution,
+    required this.tiles,
+    required this.handleTileClick,
+    required this.handleSwipe,
   });
-
-  @override
-  State<Taquin> createState() => _TaquinState();
-}
-
-class _TaquinState extends State<Taquin> {
-
-  late int taquinResolution;
-  late List<int> tiles;
-  static const int sensitivity = 6;
-
-  @override
-  void initState() {
-    super.initState();
-    taquinResolution = widget.taquinResolution;
-    tiles = List.generate(taquinResolution*taquinResolution, (index) => index);
-  }
-
-  @override
-  void didUpdateWidget(covariant Taquin oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.taquinResolution != widget.taquinResolution) {
-      taquinResolution = widget.taquinResolution;
-      tiles = List.generate(taquinResolution*taquinResolution, (index) => index);
-    }
-  }
-
-  void swapTiles(int tile1, int tile2) {
-    setState(() {
-      final temp = tiles[tile1];
-      tiles[tile1] = tiles[tile2];
-      tiles[tile2] = temp;
-    });
-  }
-
-  void handleTileClick(int tileNumber) {
-    final emptyTile = tiles.indexWhere((element) => element == taquinResolution*taquinResolution-1);
-    
-    if (emptyTile == tileNumber+1 || emptyTile == tileNumber-1 || emptyTile == tileNumber+taquinResolution || emptyTile == tileNumber-taquinResolution) {
-      swapTiles(tileNumber, emptyTile);
-    }
-  }
-
-  void handleSwipe(DragEndDetails details) {
-    final int emptyTile = tiles.indexWhere((element) => element == taquinResolution * taquinResolution - 1);
-    final int emptyTileColumn = emptyTile % taquinResolution;
-    final int emptyTileRow = (emptyTile / taquinResolution).toInt();
-
-    if (details.velocity.pixelsPerSecond.dx.abs() > details.velocity.pixelsPerSecond.dy.abs()) {
-      if (details.velocity.pixelsPerSecond.dx > sensitivity && emptyTileColumn > 0) {
-        swapTiles(emptyTile, emptyTile - 1);
-      } else if (details.velocity.pixelsPerSecond.dx < -sensitivity && emptyTileColumn < taquinResolution - 1) {
-        swapTiles(emptyTile, emptyTile + 1);
-      }
-    } else {
-      if (details.velocity.pixelsPerSecond.dy > sensitivity && emptyTileRow > 0) {
-        swapTiles(emptyTile, emptyTile - taquinResolution);
-      } else if (details.velocity.pixelsPerSecond.dy < -sensitivity && emptyTileRow < taquinResolution - 1) {
-        swapTiles(emptyTile, emptyTile + taquinResolution);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +40,7 @@ class _TaquinState extends State<Taquin> {
       ),
     );
   }
+
 }
 
 
@@ -158,5 +104,4 @@ class Tile extends StatelessWidget {
       ),
     );
   }
-
 }

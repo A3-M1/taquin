@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'exos/exolist.dart';
 import 'game/gamepage.dart';
+import 'game/gamelogic.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -62,7 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     if (inGame) {
-      page = Gamepage();
+      page = ChangeNotifierProvider(
+        create: (context) => Gamelogic(),
+        child: const Gamepage(),
+      );
       title = "Game";
     } else if (selectedExo < 0 || selectedExo >= exerciseList.length) {
       page = ExerciceChoice();
