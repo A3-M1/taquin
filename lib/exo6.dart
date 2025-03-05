@@ -28,7 +28,7 @@ class TileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return this.coloredBox();
+    return coloredBox();
   }
 
   Widget coloredBox() {
