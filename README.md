@@ -1,11 +1,14 @@
 # Taquin
 
-This app show exercices to create a final taquin game. 
+This app show exercices to create a final taquin game and you can play the final if you click on the button in the right bottom corner.
 
-It use a json in the [asset folder](/assets/) corresponding to an API request made on the [APOD API from NASA](https://api.nasa.gov/).
-```
-https://api.nasa.gov/planetary/apod?start_date=2024-01-01&end_date=2024-02-20&api_key=API_KEY
-```
+For the game, the picture is coming from a website [website](https://picsum.photos/300/300) that generate random pictures
+
+If you slide for the bottom, you can see a pop-up with different settings for the game :
+ - Slider size of the taquin
+ - Level of difficulty
+ - Where come from the pic
+ - Display the number on the squares
 
 ## Install and use the project
 
