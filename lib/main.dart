@@ -29,8 +29,15 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var selectedExo = -1;
 
+  var inGame = false;
+
   void selectExo(int index) {
     selectedExo = index;
+    notifyListeners();
+  }
+
+  void startGame() {
+    inGame = true;
     notifyListeners();
   }
 }
@@ -47,11 +54,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var selectedExo = appState.selectedExo;
+    var inGame = appState.inGame;
     Widget page;
     String title;
     bool inExercise = false;
 
-    if (selectedExo < 0 || selectedExo >= exerciseList.length) {
+
+    if (inGame) {
+      page = Placeholder();
+      title = "Game";
+    } else if (selectedExo < 0 || selectedExo >= exerciseList.length) {
       page = ExerciceChoice();
       title = "Choose an exercise";
       inExercise = false;
@@ -62,7 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      floatingActionButton: inExercise || inGame
+        ? null
+        : FloatingActionButton.extended(
+            label: const Text('Play taquin'),
+            tooltip: 'Play the game',
+            onPressed: appState.startGame,
+            icon: const Icon(Icons.videogame_asset_outlined),
+          ),
+      appBar: inGame ? null : AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
         leading: inExercise
@@ -86,23 +106,21 @@ class ExerciceChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-    return Padding(
+    return ListView.builder(
       padding: const EdgeInsets.all(20.0),
-      child: ListView.builder(
-        itemCount: exerciseList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(exerciseList[index].name),
-              subtitle: Text(exerciseList[index].description),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                appState.selectExo(index);
-              },
-            ),
-          );
-        },
-      ),
+      itemCount: exerciseList.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ListTile(
+            title: Text(exerciseList[index].name),
+            subtitle: Text(exerciseList[index].description),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              appState.selectExo(index);
+            },
+          ),
+        );
+      },
     );
   }
 }
