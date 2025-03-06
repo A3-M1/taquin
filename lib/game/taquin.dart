@@ -8,6 +8,7 @@ class Taquin extends StatelessWidget {
   final bool displayNumbers;
   final Function(int) handleTileClick;
   final Function(DragEndDetails) handleSwipe;
+  final Image image;
 
   const Taquin({
     super.key,
@@ -16,6 +17,7 @@ class Taquin extends StatelessWidget {
     required this.displayNumbers,
     required this.handleTileClick,
     required this.handleSwipe,
+    required this.image
   });
 
   @override
@@ -34,7 +36,7 @@ class Taquin extends StatelessWidget {
           (index) => Tile(
             tileNumber: tiles[index], 
             taquinResolution: taquinResolution, 
-            imageUrl: 'https://picsum.photos/512',
+            image: image,
             onTap: () => handleTileClick(index),
             displayNumber: displayNumbers,
           ),
@@ -52,7 +54,7 @@ class Tile extends StatelessWidget {
     super.key,
     required this.tileNumber,
     required this.taquinResolution,
-    required this.imageUrl,
+    required this.image,
     required this.onTap,
     this.displayNumber = false
   });
@@ -60,7 +62,7 @@ class Tile extends StatelessWidget {
   // The tile number is the index of the tile in the grid of the original image (not after being mixed). The number corresponds to latin reading order.
   final int tileNumber;
   final int taquinResolution;
-  final String imageUrl;
+  final Image image;
   final void Function() onTap;
   final bool displayNumber;
 
@@ -88,7 +90,7 @@ class Tile extends StatelessWidget {
                 ),
                 widthFactor: 1/taquinResolution,
                 heightFactor: 1/taquinResolution,
-                child: Image.network(imageUrl),
+                child: image,
               ),
             ),
           ),

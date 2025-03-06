@@ -47,7 +47,7 @@ class _GamepageState extends State<Gamepage> {
             ),
           ),
           SizedBox(height: 10),
-          Taquin(taquinResolution: taquinResolution, tiles: tiles, displayNumbers: displayNumbers, handleTileClick: handleTileClick, handleSwipe: handleSwipe),
+          Taquin(taquinResolution: taquinResolution, tiles: tiles, displayNumbers: displayNumbers, image: Image.network('https://picsum.photos/512'), handleTileClick: handleTileClick, handleSwipe: handleSwipe),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
