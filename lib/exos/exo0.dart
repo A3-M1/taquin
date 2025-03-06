@@ -15,6 +15,7 @@ class Exo0 extends StatefulWidget {
 class _Exo0State extends State<Exo0> {
   Uint8List? _webImage;
   File? _image;
+  String? _randomImageUrl;
   final ImagePicker _picker = ImagePicker();
 
   pickImageFromGallery() async {
@@ -25,6 +26,7 @@ class _Exo0State extends State<Exo0> {
       if (result != null) {
         setState(() {
           _webImage = result.files.first.bytes;
+          _randomImageUrl = null;
         });
       }
     } else {
@@ -32,6 +34,7 @@ class _Exo0State extends State<Exo0> {
       if (pickedFile != null) {
         setState(() {
           _image = File(pickedFile.path);
+          _randomImageUrl = null;
         });
       }
     }
@@ -49,8 +52,18 @@ class _Exo0State extends State<Exo0> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        _randomImageUrl = null;
       });
     }
+  }
+
+  pickRandomImage() {
+    setState(() {
+      _webImage = null;
+      _image = null;
+      _randomImageUrl =
+          'https://picsum.photos/300/300?random=${DateTime.now().millisecondsSinceEpoch}';
+    });
   }
 
   @override
@@ -60,13 +73,39 @@ class _Exo0State extends State<Exo0> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _webImage != null
-                ? Image.memory(_webImage!,
-                    width: 300, height: 300, fit: BoxFit.cover)
-                : _image != null
-                    ? Image.file(_image!,
-                        width: 300, height: 300, fit: BoxFit.cover)
-                    : const Text('No image picked.'),
+            GridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+              padding: const EdgeInsets.all(10),
+              shrinkWrap: true,
+              children: List.generate(
+                9,
+                (index) => FittedBox(
+                  fit: BoxFit.fill,
+                  child: ClipRect(
+                    child: Align(
+                      alignment:
+                          Alignment(index % 3 - 1, (index / 3).toInt() - 1),
+                      widthFactor: 1 / 3,
+                      heightFactor: 1 / 3,
+                      child: _webImage != null
+                          ? Image.memory(_webImage!,
+                              width: 300, height: 300, fit: BoxFit.cover)
+                          : _image != null
+                              ? Image.file(_image!,
+                                  width: 300, height: 300, fit: BoxFit.cover)
+                              : _randomImageUrl != null
+                                  ? Image.network(_randomImageUrl!,
+                                      width: 300,
+                                      height: 300,
+                                      fit: BoxFit.cover)
+                                  : const Text('No image picked.'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: pickImageFromGallery,
@@ -76,6 +115,11 @@ class _Exo0State extends State<Exo0> {
             ElevatedButton(
               onPressed: pickImageFromCamera,
               child: const Text('Take Photo with Camera'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: pickRandomImage,
+              child: const Text('Pick a image randomly'),
             ),
           ],
         ),

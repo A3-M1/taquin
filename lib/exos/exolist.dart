@@ -13,7 +13,8 @@ import 'exo6b.dart';
 final exerciseList = [
   Exercice(
       name: 'Exercice 0',
-      description: 'Collect image from the phone or camera',
+      description:
+          'Collect image from the phone, camera or web and display it on a grid',
       page: Exo0()),
   Exercice(name: 'Exercice 1', description: 'Display image', page: Exo1()),
   Exercice(
@@ -32,6 +33,5 @@ final exerciseList = [
       description: 'Display an adaptative image grid',
       page: Exo5c()),
   Exercice(name: 'Exercice 6', description: 'Switch two tiles', page: Exo6()),
-  Exercice(
-      name: 'Exercice 6b', description: 'Usable taquin', page: Exo6b()),
+  Exercice(name: 'Exercice 6b', description: 'Usable taquin', page: Exo6b()),
 ];
