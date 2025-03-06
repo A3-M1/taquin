@@ -13,8 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MyAppState()),
+        ChangeNotifierProvider(create: (context) => Gamelogic()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Exercices Taquin',
@@ -42,6 +45,11 @@ class MyAppState extends ChangeNotifier {
     inGame = true;
     notifyListeners();
   }
+
+  void endGame() {
+    inGame = false;
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -63,10 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     if (inGame) {
-      page = ChangeNotifierProvider(
-        create: (context) => Gamelogic(),
-        child: const Gamepage(),
-      );
+      page = Gamepage();
       title = "Game";
     } else if (selectedExo < 0 || selectedExo >= exerciseList.length) {
       page = ExerciceChoice();

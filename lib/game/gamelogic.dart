@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'enums.dart';
 
 
 class Gamelogic extends ChangeNotifier {
 
   static const int sensitivity = 6;
   
-  int _taquinResolution = 3;
+  int taquinResolution = 3;
   List<int> tiles = List.generate(9, (index) => index);
-  int get taquinResolution => _taquinResolution;
-  set taquinResolution(int value) {
+
+  void updateTaquinResolution(int value) {
     taquinResolution = value;
+    notifyListeners();
     setupGame();
   }
 
@@ -26,8 +28,20 @@ class Gamelogic extends ChangeNotifier {
   bool get canUndo => swapsTilesId1.isNotEmpty;
   int moveCount = 0;
   bool get gameStarted => moveCount > 0;
-  
-  
+
+  Difficulty difficulty = Difficulty.easy;
+
+  bool displayNumbers = false;
+
+  void setDifficulty(Difficulty value) {
+    difficulty = value;
+    notifyListeners();
+  }
+
+  void setDisplayNumbers(bool value) {
+    displayNumbers = value;
+    notifyListeners();
+  }
 
   void swapTiles(int tileId1, int tileId2) {
     final temp = tiles[tileId1];

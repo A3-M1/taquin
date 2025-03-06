@@ -5,6 +5,7 @@ class Taquin extends StatelessWidget {
 
   final int taquinResolution;
   final List<int> tiles;
+  final bool displayNumbers;
   final Function(int) handleTileClick;
   final Function(DragEndDetails) handleSwipe;
 
@@ -12,6 +13,7 @@ class Taquin extends StatelessWidget {
     super.key,
     required this.taquinResolution,
     required this.tiles,
+    required this.displayNumbers,
     required this.handleTileClick,
     required this.handleSwipe,
   });
@@ -34,7 +36,7 @@ class Taquin extends StatelessWidget {
             taquinResolution: taquinResolution, 
             imageUrl: 'https://picsum.photos/512',
             onTap: () => handleTileClick(index),
-            displayNumber: true,
+            displayNumber: displayNumbers,
           ),
         ),
       ),
