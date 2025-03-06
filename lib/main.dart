@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'exos/exolist.dart';
 import 'game/gamepage.dart';
 import 'game/gamelogic.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -69,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
     String title;
     bool inExercise = false;
 
-
     if (inGame) {
       page = Gamepage();
       title = "Game";
@@ -85,25 +89,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       floatingActionButton: inExercise || inGame
-        ? null
-        : FloatingActionButton.extended(
-            label: const Text('Play taquin'),
-            tooltip: 'Play the game',
-            onPressed: appState.startGame,
-            icon: const Icon(Icons.videogame_asset_outlined),
-          ),
-      appBar: inGame ? null : AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
-        leading: inExercise
-            ? IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {
-                  appState.selectExo(-1);
-                },
-              )
-            : null,
-      ),
+          ? null
+          : FloatingActionButton.extended(
+              label: const Text('Play taquin'),
+              tooltip: 'Play the game',
+              onPressed: appState.startGame,
+              icon: const Icon(Icons.videogame_asset_outlined),
+            ),
+      appBar: inGame
+          ? null
+          : AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(title),
+              leading: inExercise
+                  ? IconButton(
+                      icon: const Icon(Icons.home),
+                      onPressed: () {
+                        appState.selectExo(-1);
+                      },
+                    )
+                  : null,
+            ),
       body: page,
     );
   }
