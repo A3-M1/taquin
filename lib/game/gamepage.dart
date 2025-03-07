@@ -3,7 +3,7 @@ import 'package:taquin/game/gamelogic.dart';
 import 'taquin.dart';
 import 'enums.dart';
 import 'package:provider/provider.dart';
-import '../main.dart';
+import '../main.dart';// Pour choisir une image sur Web
 
 class Gamepage extends StatefulWidget {
   const Gamepage({Key? key});
@@ -25,6 +25,7 @@ class _GamepageState extends State<Gamepage> {
     var moveCount = gamelogic.moveCount;
     var canUndo = gamelogic.canUndo;
     var gameStarted = gamelogic.gameStarted;
+    var shuffled = gamelogic.shuffled;
 
     var handleTileClick = gamelogic.handleTileClick;
     var handleSwipe = gamelogic.handleSwipe;
@@ -33,13 +34,17 @@ class _GamepageState extends State<Gamepage> {
 
     var displayNumbers = gamelogic.displayNumbers;
 
+    var image = gamelogic.image;
+    var webImage = gamelogic.webImage;
+    var randomImageUrl = gamelogic.randomImageUrl;
+
 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            gameStarted ? 'Move count : $moveCount' : 'Click or swipe to start',
+            gameStarted ? 'Move count : $moveCount' : shuffled ? 'Click or swipe to move a tile' : 'Click or swipe to shuffle',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -47,7 +52,38 @@ class _GamepageState extends State<Gamepage> {
             ),
           ),
           SizedBox(height: 10),
-          Taquin(taquinResolution: taquinResolution, tiles: tiles, displayNumbers: displayNumbers, image: Image.network('https://picsum.photos/512'), handleTileClick: handleTileClick, handleSwipe: handleSwipe),
+          Taquin(
+            taquinResolution: taquinResolution, 
+            tiles: tiles, 
+            displayNumbers: displayNumbers, 
+            image: webImage != null
+                    ? Image.memory(webImage, width: 512, height: 512, fit: BoxFit.cover)
+                    : image != null
+                        ? Image.file(image, width: 512, height: 512, fit: BoxFit.cover)
+                        : randomImageUrl != null
+                            ? Image.network(randomImageUrl, width: 512, height: 512, fit: BoxFit.cover)
+                            : Image.network('https://placehold.co/500/png'),
+            handleTileClick: (int tileId) => {
+              if (handleTileClick(tileId)) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return buildWinDialog(context, moveCount, setupGame);
+                  }
+                )
+              }
+            }, 
+            handleSwipe: (DragEndDetails details) => {
+              if (handleSwipe(details)) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return buildWinDialog(context, moveCount, setupGame);
+                  }
+                )
+              }
+            }
+          ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +102,7 @@ class _GamepageState extends State<Gamepage> {
               ),
               SizedBox(width: 20),
               IconButton(
-                onPressed: gameStarted ? setupGame : null,
+                onPressed: shuffled ? setupGame : null,
                 tooltip: 'Restart game',
                 icon: Icon(Icons.autorenew_outlined),
               ),
@@ -82,6 +118,32 @@ class _GamepageState extends State<Gamepage> {
       ),
     );
   }
+}
+
+
+SimpleDialog buildWinDialog(BuildContext context, int moveCount, Function reloadGame) {
+  return SimpleDialog(
+    title: Text('Congratulations !'),
+    contentPadding: EdgeInsets.only(bottom: 25.0, left: 25.0, right: 30.0, top: 20.0),
+    children: [
+      Text('You won in $moveCount moves !'),
+      SizedBox(height: 20),
+      FilledButton.tonal(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('Close'),
+      ),
+      SizedBox(height: 10),
+      FilledButton(
+        onPressed: () {
+          reloadGame();
+          Navigator.pop(context);
+        },
+        child: Text('Refresh'),
+      ),
+    ],
+  );
 }
 
 class GameParameters extends StatefulWidget {
@@ -116,7 +178,12 @@ class _GameParametersState extends State<GameParameters> {
     var difficulty = gamelogic.difficulty;
     var setDifficulty = gamelogic.setDifficulty;
 
-    var gameStarted = gamelogic.gameStarted;
+    var shuffled = gamelogic.shuffled;
+
+    var pickImageFromGallery = gamelogic.pickImageFromGallery;
+    var pickImageFromCamera = gamelogic.pickImageFromCamera;
+    var pickRandomImage = gamelogic.pickRandomImage;
+    var canUseCamera = gamelogic.canUseCamera;
 
     return Wrap(
       children: [
@@ -165,13 +232,13 @@ class _GameParametersState extends State<GameParameters> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FilledButton.tonalIcon(
-                    onPressed: () {print('Pick image from gallery');},
+                    onPressed: pickImageFromGallery,
                     label: const Text('From gallery', style: GameParameters.boldStyle,),
                     icon: Icon(Icons.photo_library_outlined),
                   ),
                   SizedBox(width: 5),
                   FilledButton.tonalIcon(
-                    onPressed: () {print('Take image from camera');},
+                    onPressed: canUseCamera ? () {pickImageFromCamera(context);} : null,
                     label: const Text('With camera', style: GameParameters.boldStyle,),
                     icon: Icon(Icons.camera_alt_outlined),
                   ),
@@ -179,7 +246,7 @@ class _GameParametersState extends State<GameParameters> {
               ),
               SizedBox(height: 5),
               FilledButton.tonalIcon(
-                onPressed: () {print('Pick random image from internet');},
+                onPressed: pickRandomImage,
                 label: const Text('Random from internet', style: GameParameters.boldStyle,),
                 icon: Icon(Icons.shuffle_outlined),
               ),
@@ -199,19 +266,19 @@ class _GameParametersState extends State<GameParameters> {
                     label: const Text('Easy'),
                     value: Difficulty.easy,
                     icon: const Icon(Icons.sentiment_very_satisfied_outlined),
-                    enabled: !gameStarted,
+                    enabled: !shuffled,
                   ),
                   ButtonSegment<Difficulty>(
                     label: const Text('Medium'),
                     value: Difficulty.medium,
                     icon: const Icon(Icons.sentiment_satisfied_outlined),
-                    enabled: !gameStarted,
+                    enabled: !shuffled,
                   ),
                   ButtonSegment<Difficulty>(
                     label: const Text('Hard'),
                     value: Difficulty.hard,
                     icon: const Icon(Icons.sentiment_dissatisfied_outlined),
-                    enabled: !gameStarted,
+                    enabled: !shuffled,
                   ),
                 ],
                 onSelectionChanged: (Set<Difficulty> selection) => setDifficulty(selection.first),
@@ -231,7 +298,7 @@ class _GameParametersState extends State<GameParameters> {
                 max: 10,
                 divisions: 8,
                 label: taquinResolution.toString(),
-                onChanged: gameStarted ? null : (double value) {
+                onChanged: shuffled ? null : (double value) {
                   setState(() {
                     sliderValue = value;
                   });

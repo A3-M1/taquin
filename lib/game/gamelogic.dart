@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'enums.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart'; 
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 
 class Gamelogic extends ChangeNotifier {
@@ -20,6 +26,7 @@ class Gamelogic extends ChangeNotifier {
     swapsTilesId1.clear();
     swapsTilesId2.clear();
     moveCount = 0;
+    shuffled = false;
     notifyListeners();
   }
 
@@ -32,6 +39,8 @@ class Gamelogic extends ChangeNotifier {
   Difficulty difficulty = Difficulty.easy;
 
   bool displayNumbers = false;
+
+  bool shuffled = false;
 
   void setDifficulty(Difficulty value) {
     difficulty = value;
@@ -70,15 +79,72 @@ class Gamelogic extends ChangeNotifier {
     }
   }
 
-  void handleTileClick(int tileId) {
+  void shuffle(int numberOfMoves) {
+    final random = Random();
+
+    MoveDirection lastMove = MoveDirection.right;
+
+    for (var i = 0; i < numberOfMoves; i++) {
+      print('Shuffling $i');
+      final emptyTile = tiles.indexWhere((element) => element == taquinResolution * taquinResolution - 1);
+      final possibleMoves = <int>[];
+      if (lastMove != MoveDirection.right && emptyTile % taquinResolution > 0) {
+        possibleMoves.add(emptyTile - 1);
+        lastMove = MoveDirection.right;
+      }
+      if (lastMove != MoveDirection.left && emptyTile % taquinResolution < taquinResolution - 1) {
+        possibleMoves.add(emptyTile + 1);
+        lastMove = MoveDirection.left;
+      }
+      if (lastMove != MoveDirection.down && emptyTile ~/ taquinResolution > 0) {
+        possibleMoves.add(emptyTile - taquinResolution);
+        lastMove = MoveDirection.down;
+      }
+      if (lastMove != MoveDirection.up && emptyTile ~/ taquinResolution < taquinResolution - 1) {
+        possibleMoves.add(emptyTile + taquinResolution);
+        lastMove = MoveDirection.up;
+      }
+      final move = possibleMoves[random.nextInt(possibleMoves.length)];
+      swapTiles(move, emptyTile);
+    }
+    shuffled = true;
+    notifyListeners();
+  }
+
+  bool checkWin() {
+    bool win = true;
+    if (gameStarted) {
+      for (int i=0; i<taquinResolution*taquinResolution-1; i++) {
+        if (tiles[i] != i) {
+          win = false;
+          break;
+        }
+      }
+    } else {
+      win = false;
+    }
+    return win;
+  }
+
+  bool handleTileClick(int tileId) {
+    if (!shuffled) {
+      shuffle((difficulty.index+1) * 20);
+      return false;
+    }
     final emptyTile = tiles.indexWhere((element) => element == taquinResolution*taquinResolution-1);
     
     if (emptyTile == tileId+1 || emptyTile == tileId-1 || emptyTile == tileId+taquinResolution || emptyTile == tileId-taquinResolution) {
       doMove(tileId, emptyTile);
     }
+
+    return checkWin();
   }
 
-  void handleSwipe(DragEndDetails details) {
+  bool handleSwipe(DragEndDetails details) {
+    if (!shuffled) {
+      shuffle((difficulty.index+1) * 20);
+      return false;
+    }
     final int emptyTileId = tiles.indexWhere((element) => element == taquinResolution * taquinResolution - 1);
     final int emptyTileColumn = emptyTileId % taquinResolution;
     final int emptyTileRow = (emptyTileId / taquinResolution).toInt();
@@ -96,6 +162,59 @@ class Gamelogic extends ChangeNotifier {
         doMove(emptyTileId, emptyTileId + taquinResolution);
       }
     }
+
+    return checkWin();
+  }
+
+
+
+  Uint8List? webImage;
+  File? image;
+  String? randomImageUrl = 'https://picsum.photos/512?random=${DateTime.now().millisecondsSinceEpoch}';
+  final ImagePicker picker = ImagePicker();
+  final canUseCamera = !kIsWeb;
+
+  pickImageFromGallery() async {
+    if (kIsWeb) {
+      FilePickerResult? result =
+          await FilePicker.platform.pickFiles(type: FileType.image);
+
+      if (result != null) {
+        webImage = result.files.first.bytes;
+        randomImageUrl = null;
+        notifyListeners();
+      }
+    } else {
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+        randomImageUrl = null;
+        notifyListeners();
+      }
+    }
+  }
+
+  pickImageFromCamera(BuildContext context) async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Camera not supported on Web!")),
+      );
+      return;
+    }
+
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+      randomImageUrl = null;
+      notifyListeners();
+    }
+  }
+
+  pickRandomImage() {
+    webImage = null;
+    image = null;
+    randomImageUrl = 'https://picsum.photos/512?random=${DateTime.now().millisecondsSinceEpoch}';
+    notifyListeners();
   }
 
 }
