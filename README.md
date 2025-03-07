@@ -4,7 +4,7 @@ This app shows exercises to create and play a final taquin game. You can play th
 
 For the game, the picture is coming from a [website](https://picsum.photos/300/300) that generates random pictures, your gallery or your phone (you can choose where come from your pic on the setting of the app).
 
-To play the taquin, you can click on one of the square or slide with your finger on Taquin to move the square. 
+To play the taquin, you can click on one of the square or slide with your finger on Taquin to shufffle the square firstly and after to move the square. 
 
  If you click on the setting button &#9881; on the left bottom of the taquin, you can see a pop-up with different settings for the game :
  - Slider size of the taquin : change the size from 2 to 10
@@ -12,7 +12,7 @@ To play the taquin, you can click on one of the square or slide with your finger
  - Where come from the pic : randomly from a website, from your gallery or from your camera
  - Display the number on the squares or not 
 
-If you click on the reload button &#128260; on the center bottom of the taquin, you can reload the taquin game. 
+If you click on the reload button &#128260; on the center bottom of the taquin, you can reload the taquin game to the final position (you can click on one of the square or slide with your fingerto start the game). 
 
 If you click on the go back button ↩ [](#) on the left bottom of the taquin, you can come back from a move you did and the counter, on the top of the taquin, will substract the number from one occurency.
 
